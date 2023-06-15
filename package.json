@@ -1,0 +1,24 @@
+{
+  "name": "talk-exercise",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "postinstall": "npm shrinkwrap"
+  },
+  "dependencies": {
+    "pinia": "^2.0.36",
+    "vue": "^3.3.2",
+    "vue-router": "^4.2.0",
+    "element-plus": "^2.3.6",
+    "@element-plus/icons-vue": "^2.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "vite": "^4.3.5",
+    "sass": "^1.62.1",
+    "prettier": "^2.8.8"
+  }
+}
