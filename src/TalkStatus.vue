@@ -5,7 +5,7 @@ export default {
   name: "TalkStatus",
   data() {
     return {
-      talkStatus: "none",
+      talkStatus: "play",
     };
   },
 };
@@ -14,8 +14,8 @@ export default {
 <template>
   <div>
     <div class="talk-status">
-      <el-icon size="40"
-        ><VideoPlay v-if="talkStatus === 'play'" />
+      <el-icon size="40">
+        <VideoPlay v-if="talkStatus === 'play'" />
         <Headset v-if="talkStatus === 'hear'" />
         <Mic v-if="talkStatus === 'talk'" />
       </el-icon>
