@@ -1,5 +1,5 @@
 <script>
-import { VideoPlay, Headset, Mic } from "@element-plus/icons-vue";
+import { VideoPlay, Headset } from "@element-plus/icons-vue";
 
 export default {
   name: "TalkStatus",
@@ -10,11 +10,11 @@ export default {
 <template>
   <div>
     <div class="talk-status">
-      <el-icon size="40">
+      <el-icon size="40" v-if="talkStatus !== 'hear'">
         <VideoPlay v-if="talkStatus === 'play'" />
         <Headset v-if="talkStatus === 'talk'" />
-        <Mic v-if="talkStatus === 'hear'" />
       </el-icon>
+      <img v-else src="./hear.gif" alt="Hear" width="80" height="80" />
     </div>
   </div>
 </template>
