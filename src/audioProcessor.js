@@ -14,7 +14,7 @@ function debugging() {
   }
 }
 
-export async function sound(text) {
+export async function sound(text, role) {
   if (await debugging()) {
     return;
   }
@@ -24,7 +24,8 @@ export async function sound(text) {
     "eastus"
   );
 
-  speechConfig.speechSynthesisVoiceName = "en-US-JennyNeural";
+  speechConfig.speechSynthesisVoiceName =
+    role === "student" ? "en-US-AnaNeural" : "en-US-JennyNeural";
   speechConfig.speechSynthesisLanguage = "en-US";
   const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
   const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
