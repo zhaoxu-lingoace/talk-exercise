@@ -12,8 +12,8 @@ export default {
     <div class="talk-status">
       <el-icon size="40">
         <VideoPlay v-if="talkStatus === 'play'" />
-        <Headset v-if="talkStatus === 'hear'" />
-        <Mic v-if="talkStatus === 'talk'" />
+        <Headset v-if="talkStatus === 'talk'" />
+        <Mic v-if="talkStatus === 'hear'" />
       </el-icon>
     </div>
   </div>

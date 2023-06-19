@@ -1,20 +1,17 @@
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 
-async function callAzureTextToSpeech(
-  text,
-  { speechSynthesisVoiceName, speechSynthesisLanguage }
-) {
+export async function sound(text) {
   const speechConfig = sdk.SpeechConfig.fromSubscription(
     "f6443d23629344a5b71c5a22475bb62a",
     "eastus"
   );
 
-  speechConfig.speechSynthesisVoiceName = speechSynthesisVoiceName;
-  speechConfig.speechSynthesisLanguage = speechSynthesisLanguage;
+  speechConfig.speechSynthesisVoiceName = "en-US-JennyNeural";
+  speechConfig.speechSynthesisLanguage = "en-US";
   const audioConfig = sdk.AudioConfig.fromDefaultSpeakerOutput();
   const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
 
-  const result = await new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     synthesizer.speakTextAsync(
       text,
       (result) => {
@@ -29,30 +26,27 @@ async function callAzureTextToSpeech(
   });
 
   synthesizer.close();
-  return result.audioData;
-}
-
-export async function sound(text) {
-  console.debug("sound", text);
-
-  // await callAzureTextToSpeech(text, {
-  //   speechSynthesisVoiceName: "en-US-JennyNeural",
-  //   speechSynthesisLanguage: "en-US",
-  // });
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 1000);
-  });
 }
 
 export async function heard(text) {
-  console.debug("heard", text);
+  const speechConfig = sdk.SpeechConfig.fromSubscription(
+    "1974b8e0a8e142de9146db6e62ab052e",
+    "westus"
+  );
+  speechConfig.speechRecognitionLanguage = "en-US";
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 1000);
+  const recognizer = new sdk.SpeechRecognizer(speechConfig);
+
+  await new Promise((resolve, reject) => {
+    recognizer.recognizeOnceAsync(
+      (result) => {
+        resolve(result);
+      },
+      (error) => {
+        reject(error);
+      }
+    );
   });
+
+  recognizer.close();
 }

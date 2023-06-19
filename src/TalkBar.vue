@@ -46,7 +46,9 @@ export default {
       }
     },
     onClickTalkStatus() {
-      this.doTalk();
+      if (this.talkService.state.value === "play") {
+        this.doTalk();
+      }
     },
   },
   created() {
