@@ -10,17 +10,6 @@ const talkMachine = createMachine({
         HEAR: "hear",
       },
     },
-    play: {
-      on: {
-        TALK: "talk",
-        HEAR: "hear",
-      },
-    },
-    done: {
-      on: {
-        PLAY: "play",
-      },
-    },
     talk: {
       on: {
         DONE: "done",
@@ -29,6 +18,17 @@ const talkMachine = createMachine({
     hear: {
       on: {
         DONE: "done",
+      },
+    },
+    done: {
+      on: {
+        PLAY: "play",
+      },
+    },
+    play: {
+      on: {
+        TALK: "talk",
+        HEAR: "hear",
       },
     },
   },
