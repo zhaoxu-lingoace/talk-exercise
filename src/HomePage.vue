@@ -16,13 +16,32 @@ export default {
       progressService: interpret(progressMachine),
       talkList: progressMachine.initialState.context.talkList,
       isCanPlayback: false,
+      autoScrollTimer: undefined,
     };
   },
   methods: {
+    enableAutoScroll(yes) {
+      const mainElement = this.$refs.mainRef.$el;
+      if (yes) {
+        mainElement.style.overflow = "hidden";
+
+        this.autoScrollTimer = setInterval(() => {
+          mainElement.scrollTop = mainElement.scrollHeight;
+        }, 100);
+      } else {
+        clearInterval(this.autoScrollTimer);
+        this.autoScrollTimer = undefined;
+
+        mainElement.style.overflow = "auto";
+        mainElement.scrollTop = 0;
+      }
+    },
     onPrepare() {
       this.$alert("准备好了么，练习马上开始啦~", "提示", {
         confirmButtonText: "准备好了",
         callback: () => {
+          this.enableAutoScroll(true);
+
           this.progressService.send("OK");
         },
       });
@@ -32,6 +51,8 @@ export default {
         confirmButtonText: "好的",
         callback: () => {
           this.isCanPlayback = true;
+
+          this.enableAutoScroll(false);
         },
       });
     },
@@ -79,16 +100,14 @@ export default {
 
         <el-divider></el-divider>
 
-        <el-main>
-          <el-scrollbar>
-            <TalkBar
-              v-for="(item, index) of talkList"
-              :key="index"
-              :content="item"
-              :playback="isCanPlayback"
-              @continue="onContinue"
-            ></TalkBar>
-          </el-scrollbar>
+        <el-main ref="mainRef">
+          <TalkBar
+            v-for="(item, index) of talkList"
+            :key="index"
+            :content="item"
+            :playback="isCanPlayback"
+            @continue="onContinue"
+          ></TalkBar>
         </el-main>
       </el-container>
     </div>
