@@ -21,19 +21,19 @@ export default {
   },
   methods: {
     enableAutoScroll(yes) {
-      const mainElement = this.$refs.mainRef.$el;
+      const scrollbarElement = this.$refs.scrollbarRef.wrapRef;
       if (yes) {
-        mainElement.style.overflow = "hidden";
+        scrollbarElement.style.overflow = "hidden";
 
         this.autoScrollTimer = setInterval(() => {
-          mainElement.scrollTop = mainElement.scrollHeight;
+          scrollbarElement.scrollTop = scrollbarElement.scrollHeight;
         }, 100);
       } else {
         clearInterval(this.autoScrollTimer);
         this.autoScrollTimer = undefined;
 
-        mainElement.style.overflow = "auto";
-        mainElement.scrollTop = 0;
+        scrollbarElement.style.overflow = "auto";
+        scrollbarElement.scrollTop = 0;
       }
     },
     onPrepare() {
@@ -100,14 +100,16 @@ export default {
 
         <el-divider></el-divider>
 
-        <el-main ref="mainRef">
-          <TalkBar
-            v-for="(item, index) of talkList"
-            :key="index"
-            :content="item"
-            :playback="isCanPlayback"
-            @continue="onContinue"
-          ></TalkBar>
+        <el-main>
+          <el-scrollbar ref="scrollbarRef">
+            <TalkBar
+              v-for="(item, index) of talkList"
+              :key="index"
+              :content="item"
+              :playback="isCanPlayback"
+              @continue="onContinue"
+            ></TalkBar>
+          </el-scrollbar>
         </el-main>
       </el-container>
     </div>
