@@ -11,6 +11,7 @@ function createContext() {
 const assignNext = assign((context) => {
   const progress = context.progress + 1;
   return {
+    ...context,
     progress,
     talkList: context.talkTemplate.slice(0, progress),
   };
@@ -44,7 +45,7 @@ const progressMachine = createMachine({
         CONTINUE: [
           {
             target: "done",
-            cond: (context) => context.progress > context.talkTemplate.length,
+            cond: (context) => context.progress === context.talkTemplate.length,
           },
           {
             actions: assignNext,

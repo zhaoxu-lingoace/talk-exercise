@@ -3,14 +3,22 @@ import ProfilePhoto from "@/ProfilePhoto.vue";
 import PointBox from "@/PointBox.vue";
 import TalkStatus from "@/TalkStatus.vue";
 import * as audioProcessor from "@/audioProcessor";
+import talkMachine from "@/talkMachine";
+import { interpret } from "@xstate/fsm";
 
 export default {
   name: "TalkBar",
-  props: ["content"],
+  props: ["content", "playback"],
   components: {
     ProfilePhoto,
     PointBox,
     TalkStatus,
+  },
+  data() {
+    return {
+      talkService: interpret(talkMachine),
+      talkStatus: talkMachine.initialState.value,
+    };
   },
   computed: {
     direction() {
@@ -18,14 +26,45 @@ export default {
     },
   },
   methods: {
-    onClickTalkStatus() {
+    async doTalk() {
       switch (this.content.who) {
         case "teacher":
-          audioProcessor.sound(this.content.words);
+          this.talkService.send("TALK");
+
+          await audioProcessor.sound(this.content.words);
           break;
         case "student":
-          audioProcessor.heard(this.content.words);
+          this.talkService.send("HEAR");
+
+          await audioProcessor.heard(this.content.words);
           break;
+      }
+
+      this.talkService.send("DONE");
+      if (this.playback) {
+        this.talkService.send("PLAY");
+      }
+    },
+    onClickTalkStatus() {
+      this.doTalk();
+    },
+  },
+  created() {
+    this.talkService.subscribe((state) => {
+      this.talkStatus = state.value;
+    });
+
+    this.talkService.start();
+  },
+  async mounted() {
+    await this.doTalk();
+
+    this.$emit("continue");
+  },
+  watch: {
+    playback(value) {
+      if (value) {
+        this.talkService.send("PLAY");
       }
     },
   },
@@ -44,7 +83,11 @@ export default {
         <PointBox :direction="direction" :words="content.words"></PointBox>
       </div>
 
-      <TalkStatus class="talk-status" @click="onClickTalkStatus"></TalkStatus>
+      <TalkStatus
+        class="talk-status"
+        @click="onClickTalkStatus"
+        :talkStatus="talkStatus"
+      ></TalkStatus>
     </div>
   </div>
 </template>

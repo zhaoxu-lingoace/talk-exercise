@@ -33,12 +33,26 @@ async function callAzureTextToSpeech(
 }
 
 export async function sound(text) {
-  await callAzureTextToSpeech(text, {
-    speechSynthesisVoiceName: "en-US-JennyNeural",
-    speechSynthesisLanguage: "en-US",
+  console.debug("sound", text);
+
+  // await callAzureTextToSpeech(text, {
+  //   speechSynthesisVoiceName: "en-US-JennyNeural",
+  //   speechSynthesisLanguage: "en-US",
+  // });
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
   });
 }
 
 export async function heard(text) {
-  console.debug(text);
+  console.debug("heard", text);
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
 }

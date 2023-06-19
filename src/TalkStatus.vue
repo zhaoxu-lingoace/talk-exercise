@@ -3,11 +3,7 @@ import { VideoPlay, Headset, Mic } from "@element-plus/icons-vue";
 
 export default {
   name: "TalkStatus",
-  data() {
-    return {
-      talkStatus: "play",
-    };
-  },
+  props: ["talkStatus"],
 };
 </script>
 

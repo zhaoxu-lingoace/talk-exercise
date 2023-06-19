@@ -15,13 +15,14 @@ export default {
     return {
       progressService: interpret(progressMachine),
       talkList: progressMachine.initialState.context.talkList,
+      isCanPlayback: false,
     };
   },
   methods: {
     onPrepare() {
       this.$alert("准备好了么，练习马上开始啦~", "提示", {
         confirmButtonText: "准备好了",
-        callback() {
+        callback: () => {
           this.progressService.send("OK");
         },
       });
@@ -29,7 +30,13 @@ export default {
     onDone() {
       this.$alert("练习结束啦~", "提示", {
         confirmButtonText: "好的",
+        callback: () => {
+          this.isCanPlayback = true;
+        },
       });
+    },
+    onContinue() {
+      this.progressService.send("CONTINUE");
     },
   },
   created() {
@@ -78,6 +85,8 @@ export default {
               v-for="(item, index) of talkList"
               :key="index"
               :content="item"
+              :playback="isCanPlayback"
+              @continue="onContinue"
             ></TalkBar>
           </el-scrollbar>
         </el-main>
