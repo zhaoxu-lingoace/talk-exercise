@@ -104,6 +104,10 @@ export default {
       display: flex;
       align-items: center;
     }
+
+    .el-main {
+      padding-bottom: 0;
+    }
   }
 }
 </style>
