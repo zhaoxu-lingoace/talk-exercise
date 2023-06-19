@@ -14,7 +14,8 @@
     "vue-router": "^4.2.0",
     "element-plus": "^2.3.6",
     "@element-plus/icons-vue": "^2.1.0",
-    "microsoft-cognitiveservices-speech-sdk": "^1.26.0"
+    "microsoft-cognitiveservices-speech-sdk": "^1.26.0",
+    "@xstate/fsm": "^2.0.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

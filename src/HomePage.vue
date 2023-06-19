@@ -1,6 +1,9 @@
 <script>
 import { HomeFilled } from "@element-plus/icons-vue";
 import TalkBar from "@/TalkBar.vue";
+import progressMachine from "@/progressMachine";
+import { interpret } from "@xstate/fsm";
+import talkTemplates from "@/talkTemplates";
 
 export default {
   name: "HomePage",
@@ -10,23 +13,43 @@ export default {
   },
   data() {
     return {
-      talkTemplate: [
-        { who: "teacher", words: "What's your name?" },
-        { who: "student", words: "I'm Mike." },
-        { who: "teacher", words: "Which class are you in?" },
-        { who: "student", words: "I'm in class one." },
-        { who: "teacher", words: "How old are you?" },
-        { who: "student", words: "I'm nine years old." },
-        { who: "teacher", words: "Which class are you in?" },
-        { who: "student", words: "I'm in class two." },
-      ],
-      progress: 7,
+      progressService: interpret(progressMachine),
+      talkList: progressMachine.initialState.context.talkList,
     };
   },
-  computed: {
-    talkList() {
-      return this.talkTemplate.slice(0, this.progress);
+  methods: {
+    onPrepare() {
+      this.$alert("准备好了么，练习马上开始啦~", "提示", {
+        confirmButtonText: "准备好了",
+        callback() {
+          this.progressService.send("OK");
+        },
+      });
     },
+    onDone() {
+      this.$alert("练习结束啦~", "提示", {
+        confirmButtonText: "好的",
+      });
+    },
+  },
+  created() {
+    this.progressService.subscribe((state) => {
+      this.talkList = state.context.talkList;
+
+      if (state.matches("prepare")) {
+        this.onPrepare();
+      }
+
+      if (state.matches("done")) {
+        this.onDone();
+      }
+    });
+
+    this.progressService.start();
+  },
+  mounted() {
+    const talkTemplate = talkTemplates[0];
+    this.progressService.send({ type: "LOAD", talkTemplate });
   },
 };
 </script>
