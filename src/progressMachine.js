@@ -5,6 +5,7 @@ function createContext() {
     progress: 0,
     talkTemplate: [],
     talkList: [],
+    exchange: false,
   };
 }
 
@@ -58,6 +59,17 @@ const progressMachine = createMachine({
         RESET: {
           target: "none",
           actions: assign(createContext()),
+        },
+        EXCHANGE: {
+          target: "processing",
+          actions: [
+            assign({
+              exchange: true,
+              progress: 0,
+              talkList: [],
+            }),
+            assignNext,
+          ],
         },
       },
     },

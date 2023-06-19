@@ -8,7 +8,7 @@ import { interpret } from "@xstate/fsm";
 
 export default {
   name: "TalkBar",
-  props: ["content", "playback"],
+  props: ["content", "playback", "exchange"],
   components: {
     ProfilePhoto,
     PointBox,
@@ -29,12 +29,12 @@ export default {
     async doTalk() {
       switch (this.content.who) {
         case "teacher":
-          this.talkService.send("TALK");
+          this.talkService.send(this.exchange ? "HEAR" : "TALK");
 
           await audioProcessor.sound(this.content.words);
           break;
         case "student":
-          this.talkService.send("HEAR");
+          this.talkService.send(this.exchange ? "TALK" : "HEAR");
 
           await audioProcessor.heard(this.content.words);
           break;

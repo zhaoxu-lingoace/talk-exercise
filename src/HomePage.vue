@@ -15,6 +15,7 @@ export default {
     return {
       progressService: interpret(progressMachine),
       talkList: progressMachine.initialState.context.talkList,
+      exchange: progressMachine.initialState.context.exchange,
       isCanPlayback: false,
       autoScrollTimer: undefined,
     };
@@ -23,6 +24,10 @@ export default {
     enableAutoScroll(yes) {
       const scrollbarElement = this.$refs.scrollbarRef.wrapRef;
       if (yes) {
+        if (this.autoScrollTimer) {
+          return;
+        }
+
         scrollbarElement.style.overflow = "hidden";
 
         this.autoScrollTimer = setInterval(() => {
@@ -47,6 +52,16 @@ export default {
       });
     },
     onDone() {
+      if (!this.exchange) {
+        this.$alert("角色交换", "提示", {
+          confirmButtonText: "好的",
+          callback: () => {
+            this.progressService.send("EXCHANGE");
+          },
+        });
+        return;
+      }
+
       this.$alert("练习结束啦~", "提示", {
         confirmButtonText: "好的",
         callback: () => {
@@ -63,6 +78,7 @@ export default {
   created() {
     this.progressService.subscribe((state) => {
       this.talkList = state.context.talkList;
+      this.exchange = state.context.exchange;
 
       if (state.matches("prepare")) {
         this.onPrepare();
@@ -104,9 +120,10 @@ export default {
           <el-scrollbar ref="scrollbarRef">
             <TalkBar
               v-for="(item, index) of talkList"
-              :key="index"
+              :key="`${index}-${exchange}`"
               :content="item"
               :playback="isCanPlayback"
+              :exchange="exchange"
               @continue="onContinue"
             ></TalkBar>
           </el-scrollbar>
