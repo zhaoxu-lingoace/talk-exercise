@@ -1,6 +1,24 @@
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 
+const debug = false;
+
+function debugging() {
+  if (debug) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 1000);
+    });
+  } else {
+    return Promise.resolve(false);
+  }
+}
+
 export async function sound(text) {
+  if (await debugging()) {
+    return;
+  }
+
   const speechConfig = sdk.SpeechConfig.fromSubscription(
     "f6443d23629344a5b71c5a22475bb62a",
     "eastus"
@@ -29,6 +47,10 @@ export async function sound(text) {
 }
 
 export async function heard(text) {
+  if (await debugging()) {
+    return;
+  }
+
   const speechConfig = sdk.SpeechConfig.fromSubscription(
     "1974b8e0a8e142de9146db6e62ab052e",
     "westus"
