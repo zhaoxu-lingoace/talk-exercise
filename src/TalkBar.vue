@@ -26,19 +26,26 @@ export default {
     },
   },
   methods: {
-    async doTalk() {
-      switch (this.content.who) {
-        case "teacher":
-          this.talkService.send(this.exchange ? "HEAR" : "TALK");
+    async doTalk(wayParam) {
+      let way = wayParam;
+      if (!way) {
+        switch (this.content.who) {
+          case "teacher":
+            way = "sound";
+            break;
+          case "student":
+            way = "heard";
+            break;
+        }
 
-          await audioProcessor.sound(this.content.words);
-          break;
-        case "student":
-          this.talkService.send(this.exchange ? "TALK" : "HEAR");
-
-          await audioProcessor.heard(this.content.words);
-          break;
+        if (this.exchange) {
+          way = way === "sound" ? "heard" : "sound";
+        }
       }
+
+      this.talkService.send(way === "sound" ? "TALK" : "HEAR");
+
+      await audioProcessor[way](this.content.words, this.content.who);
 
       this.talkService.send("DONE");
       if (this.playback) {
@@ -47,7 +54,7 @@ export default {
     },
     onClickTalkStatus() {
       if (this.talkService.state.value === "play") {
-        this.doTalk();
+        this.doTalk("sound");
       }
     },
   },
